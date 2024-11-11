@@ -162,3 +162,8 @@ $(document).ready(function() {
     // Inicializar el precio total
     actualizarPrecioTotal();
 });
+
+
+
+
+

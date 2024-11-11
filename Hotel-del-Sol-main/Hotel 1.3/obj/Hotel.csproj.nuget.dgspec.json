@@ -1,28 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Usuario\\Desktop\\Hotel-del-Sol-main\\Hotel 1.3\\Hotel.csproj": {}
+    "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\Hotel.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Usuario\\Desktop\\Hotel-del-Sol-main\\Hotel 1.3\\Hotel.csproj": {
+    "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\Hotel.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Usuario\\Desktop\\Hotel-del-Sol-main\\Hotel 1.3\\Hotel.csproj",
+        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\Hotel.csproj",
         "projectName": "Hotel",
-        "projectPath": "C:\\Users\\Usuario\\Desktop\\Hotel-del-Sol-main\\Hotel 1.3\\Hotel.csproj",
-        "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Usuario\\Desktop\\Hotel-del-Sol-main\\Hotel 1.3\\obj\\",
+        "projectPath": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\Hotel.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -84,7 +81,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
