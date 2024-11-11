@@ -42,28 +42,33 @@
                     <th>Habitación</th>
                     <th>Acompañantes</th>
                     <th>Acciones</th>
+                    
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
+                    var pagoPendiente = !item.Pagos.Any() || item.Pagos.Any(p => p.Estado == "Pendiente");
                     <tr>
+
                         <td>@(item.Usuario?.NombreUsuario ?? "N/A")</td>
                         <td>@item.Usuario?.Nombre</td>
                         <td>@item.FechaInicio.ToShortDateString() - @item.FechaFin.ToShortDateString()</td>
                         <td>@item.Habitacion?.NumeroHabitacion</td>
-                        <td>@(item.NumeroAcompanantes.HasValue ? item.NumeroAcompanantes.ToString() : "No tiene acompañantes")</td>
+                        <td>@(item.NumeroAcompanantes.HasValue ? item.NumeroAcompanantes.ToString() : "No tiene acompañantes")
+                        </td>
                         <td>
                             <button onclick="loadDetailsModal('@item.Id')" class="btn btn-info">
                                 <span class="iconify icon-search" data-icon="line-md:search-filled" data-inline="false"
                                     data-rotate="auto"></span>
                             </button>
-                            <button onclick="loadDetailsModal('@item.Id')" class="btn btn-pay">
+                            <button class="btn @(pagoPendiente ? "btn-danger" : "btn-pay")">
                                 <span class="iconify icon-search" data-icon="mdi:currency-usd" data-inline="false"></span>
                             </button>
 
 
                         </td>
+                        
                     </tr>
                 }
             </tbody>

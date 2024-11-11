@@ -26,7 +26,7 @@ namespace Hotel.Controllers
         //[AuthorizePermission("Prueba")]
         public async Task<IActionResult> Index()
         {
-            var hotelContext = _context.Reservas.Include(r => r.Habitacion).Include(r => r.Usuario).Include(r => r.Comodidads).Include(r => r.Servicios);
+            var hotelContext = _context.Reservas.Include(r => r.Habitacion).Include(r => r.Usuario).Include(r => r.Comodidads).Include(r => r.Servicios).Include(r => r.Pagos);
             return View(await hotelContext.ToListAsync());
 
         }
@@ -95,10 +95,15 @@ namespace Hotel.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UsuarioId,HabitacionId,FechaInicio,FechaFin,PrecioTotal,NumeroAcompanantes,FechaReserva,Comodidads,Servicios")] Reserva reserva, List<Guid> Comodidads, List<Guid> Servicios, List<Huesped> Huespedes)
+        public async Task<IActionResult> Create([Bind("Id,UsuarioId,HabitacionId,FechaInicio,FechaFin,PrecioTotal,NumeroAcompanantes,FechaReserva,Comodidads,Servicios")] Reserva reserva, List<Guid> Comodidads, List<Guid> Servicios, List<Huesped> Huespedes, string submitButton)
         {
             if (ModelState.IsValid)
             {
+                if (_context.Reservas.Any(r => r.Id == reserva.Id))
+                {
+                    return Json(new { success = false, message = "La reserva ya existe." });
+                }
+
                 reserva.Id = Guid.NewGuid();
                 foreach (var ComodidadId in Comodidads)
                 {
@@ -148,9 +153,22 @@ namespace Hotel.Controllers
                     reserva.Huespedes.Add(huesped);
                 }
 
+
                 _context.Add(reserva);
                 await _context.SaveChangesAsync();
-                return Json(new { success = true });
+                if (submitButton == "Pagar")
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        pagarUrl = Url.Action("Pagar", "Reservas", new { id = reserva.Id })
+                    });
+                }
+                else if (submitButton == "Guardar")
+                {
+                    // Redirigir a una vista diferente, por ejemplo, a la lista de reservas
+                    return Json(new { success = true, redirectUrl = Url.Action("Index", "Reservas") });
+                }
             }
 
             // Si hay un error, se deben recargar las listas de selección
@@ -313,6 +331,98 @@ namespace Hotel.Controllers
                 return Json(comodidad);
             }
             return Json(0);
+        }
+
+
+        //accion para pagar la reserva
+        public async Task<IActionResult> Pagar(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var reserva = await _context.Reservas.FindAsync(id);
+            if (reserva == null)
+            {
+                return NotFound();
+            }
+
+            var pago = new Pago
+            {
+                ReservaId = reserva.Id,
+                FechaPago = DateOnly.FromDateTime(DateTime.Now)
+            };
+
+            return View(pago);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Pagar([Bind("ReservaId,MetodoPago,FechaPago,Monto,Estado")] Pago pago, IFormFile comprobante)
+        {
+            if (ModelState.IsValid)
+            {
+                pago.Id = Guid.NewGuid();
+                pago.FechaPago = DateOnly.FromDateTime(DateTime.Now);
+                pago.Estado = "Pendiente";
+
+                // Guardar el comprobante en el servidor
+                if (comprobante != null && comprobante.Length > 0)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "comprobantes");
+                    Directory.CreateDirectory(directoryPath); // Crear el directorio si no existe
+
+                    var fileExtension = Path.GetExtension(comprobante.FileName);
+                    var fileName = $"{pago.Id}{fileExtension}";
+                    var filePath = Path.Combine(directoryPath, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await comprobante.CopyToAsync(stream);
+                    }
+
+                    // Guarda la ruta relativa para su uso posterior
+                    pago.ComprobantePath = $"/img/comprobantes/{fileName}";
+                }
+                else
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = "Debe subir un comprobante." });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Debe subir un comprobante.");
+                        return View(pago);
+                    }
+                }
+
+                _context.Add(pago);
+                await _context.SaveChangesAsync();
+
+                // Generar la URL de redirección
+                var redirectUrl = Url.Action("Index", "Reservas");
+
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true, redirectUrl = redirectUrl });
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            // Si hay errores de validación
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                var errorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                var errorMessage = errorMessages.Any() ? string.Join(", ", errorMessages) : "Error al procesar el pago.";
+                return Json(new { success = false, message = errorMessage });
+            }
+
+            return View(pago);
         }
 
 

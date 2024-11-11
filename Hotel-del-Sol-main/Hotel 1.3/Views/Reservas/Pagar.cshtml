@@ -1,0 +1,53 @@
+﻿@model Hotel.Models.Pago
+
+@{
+    ViewData["Title"] = "Pagar Reserva";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+
+<link rel="stylesheet" href="~/css/Reservas/pagos.css">
+
+
+
+<form id="formpagos" asp-action="Pagar" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <h2>Pagar Reserva</h2>
+    <div class="form-group">
+        <label asp-for="MetodoPago" class="control-label">Método de Pago</label>
+        <input asp-for="MetodoPago" class="form-control" />
+        <span asp-validation-for="MetodoPago" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Monto" class="control-label">Monto</label>
+        <input asp-for="Monto" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Monto" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="comprobante" class="control-label">Subir Comprobante</label>
+        <input type="file" name="comprobante" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <input type="hidden" asp-for="Estado" value="Estado del Pago" />
+        <input type="hidden" asp-for="ReservaId" />
+        <span asp-validation-for="Estado" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="ReservaId" />
+    <div class="form-group">
+        <input type="submit" name="submitButton" value="Pagar" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/localization/messages_es.min.js" integrity="sha512-Kcb2OYCSBj5/343s73G4ue17xTxHhWeLwfzE8gDQh9EAbWyEt8Jh6cNgGt86XgjS0JRzIlARtVPLa+o57+HQ2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/scriptReservas/swiftAlertPago.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

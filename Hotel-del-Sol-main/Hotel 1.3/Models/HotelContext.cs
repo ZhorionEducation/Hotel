@@ -132,6 +132,7 @@ namespace Hotel.Models
                 entity.Property(e => e.Estado).HasMaxLength(50);
                 entity.Property(e => e.MetodoPago).HasMaxLength(50);
                 entity.Property(e => e.Monto).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.ComprobantePath).HasMaxLength(255);
 
                 entity.HasOne(d => d.Reserva).WithMany(p => p.Pagos)
                     .HasForeignKey(d => d.ReservaId)

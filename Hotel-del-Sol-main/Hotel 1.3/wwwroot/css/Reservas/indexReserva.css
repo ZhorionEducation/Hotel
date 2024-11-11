@@ -38,6 +38,8 @@
     margin-right: 10px;
 }
 
+
+
 .containerActions {
     display: flex;
     justify-content: space-between;
@@ -210,6 +212,16 @@
         background-color: #67ba84;
         
         transition: 0,5s;
+    }
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 15px;
+}
+
+    .btn-danger:hover {
+        background-color: #c9302c;
     }
 
 .icon-search {
