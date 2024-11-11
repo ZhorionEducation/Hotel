@@ -1,0 +1,114 @@
+﻿@model IEnumerable<Hotel.Models.ServiciosAdicionale>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/css/Servicios/indexServicios.css">
+<link rel="stylesheet" href="~/css/Servicios/modalsGlobalServicios.css">
+
+
+<div class="containerindexServicio">
+    <h1 class="header">Gestión de Servicios</h1>
+
+    <div class="containerActions">
+        <a href="@Url.Action("Create", "ServiciosAdicionales")" class="button"><i class="fas fa-plus"></i>Nuevo
+            Servicio</a>
+        <div class="search-container">
+            <a href="@Url.Action("ExportToExcel", "Habitaciones")" class="button-pdf"><i class="fas fa-file-pdf"></i></a>
+                <a href="@Url.Action("ExportToExcel", "Habitaciones")" class="button-excel"><i class="fas fa-file-excel"></i></a>
+            <input checked="" class="checkbox" type="checkbox">
+            <div class="mainbox">
+                <div class="iconContainer">
+                    <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="search_icon">
+                        <path
+                            d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z">
+                        </path>
+                    </svg>
+                </div>
+                <input class="search_input" placeholder="Buscar servicios..." type="text" id="searchInput">
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Nombre</td>
+                        <td>@item.Descripcion</td>
+                        <td>@item.Precio</td>
+                        <td>
+                            <div class="form-check form-switch switch-lg">
+                                <input class="form-check-input" type="checkbox" id="switch-@item.Id" @(item.Activo ?? false ?
+                            "checked" : "") disabled>
+                                <label class="form-check-label" for="switch-@item.Id">@((item.Activo ?? false) ? "" :
+                            "")</label>
+                            </div>
+                        </td>
+                        <td>
+                            <button onclick="loadEditForm('@item.Id')" class="btn btn-info">
+                                <span class="iconify" data-icon="mdi:tools" data-inline="false" data-rotate="auto"></span>
+                            </button>
+                            <button onclick="loadDeleteForm('@item.Id')" class="btn btn-danger">
+                                <span class="iconify" data-icon="mdi:delete" data-inline="false" data-rotate="auto"></span>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No hay servicios disponibles.</p>
+    }
+</div>
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">&times;</span>
+        <div class="modal-body">
+            <div id="editFormContainer"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para detalles -->
+<div id="detailsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeDetailsModal()">&times;</span>
+        <div class="modal-body">
+            <div id="detailsContainer"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Eliminación -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeDeleteModal()">&times;</span>
+        <div class="modal-body">
+            <div id="deleteFormContainer"></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/scriptServicios/indexServicios.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

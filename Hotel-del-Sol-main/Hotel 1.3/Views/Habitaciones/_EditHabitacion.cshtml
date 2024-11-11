@@ -1,0 +1,83 @@
+﻿@model Hotel.Models.Habitacione
+
+@{
+    ViewData["Title"] = "Editar Habitación";
+}
+
+<h1>Editar Habitación</h1>
+
+<form asp-action="Edit" id="editForm" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+
+    <!-- Número de Habitación -->
+    <div class="form-group">
+        <label asp-for="NumeroHabitacion" class="control-label">Número de Habitación</label>
+        <input asp-for="NumeroHabitacion" class="form-control" />
+        <span asp-validation-for="NumeroHabitacion" class="text-danger"></span>
+    </div>
+
+    <!-- Descripción -->
+    <div class="form-group">
+        <label asp-for="Descripcion" class="control-label">Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+
+    <!-- Capacidad -->
+    <div class="form-group">
+        <label asp-for="Capacidad" class="control-label">Capacidad</label>
+        <input asp-for="Capacidad" class="form-control" />
+        <span asp-validation-for="Capacidad" class="text-danger"></span>
+    </div>
+
+    <!-- Precio por Noche -->
+    <div class="form-group">
+        <label asp-for="PrecioPorNoche" class="control-label">Precio por Noche</label>
+        <input asp-for="PrecioPorNoche" class="form-control" />
+        <span asp-validation-for="PrecioPorNoche" class="text-danger"></span>
+    </div>
+
+    
+
+    <!-- Activo -->
+    <div class="form-group">
+        <label asp-for="Activo" class="control-label">Activo</label>
+        <div class="form-check form-switch">
+            <input type="checkbox" name="Activo" value="true" class="form-check-input" id="switch-@Model.Id"
+            @(Model.Activo.GetValueOrDefault() ? "checked" : "") />
+            <label class="form-check-label" for="switch-@Model.Id">Sí</label>
+        </div>
+        <input type="hidden" name="Activo" value="false" />
+        <span asp-validation-for="Activo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Comodidades" class="control-label">Comodidades</label>
+        <select asp-for="Comodidades" class="form-control" asp-items="ViewBag.Comodidades" multiple>
+        </select>
+    </div>
+
+    <!-- Imagen Actual -->
+    <div class="form-group">
+        <label class="control-label">Imagen Actual</label>
+        <div class="mb-3">
+            <img src="~/img/habitaciones/@Model.Imagen" alt="Imagen de la habitación" class="img-thumbnail" />
+        </div>
+    </div>
+
+    <!-- Nueva Imagen -->
+    <div class="form-group">
+        <label for="nuevaImagen" class="control-label">Nueva Imagen (opcional)</label>
+        <input type="file" name="nuevaImagen" class="form-control-file" />
+    </div>
+
+    <div class="modal-footer d-flex justify-content-start">
+        <button type="submit" class="btn btn-primary mr-2">
+            <i class="iconify" data-icon="mdi:content-save" data-width="24" data-height="24"></i>
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">
+            <i class="iconify" data-icon="mdi:close" data-width="24" data-height="24"></i>
+        </button>
+    </div>
+</form>

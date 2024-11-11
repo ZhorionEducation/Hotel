@@ -1,0 +1,68 @@
+@model IEnumerable<Hotel.Models.Reserva>
+
+@{
+    ViewData["Title"] = "Mis Reservas";
+}
+
+<link rel="stylesheet" href="~/css/Reservas/modalDetailsReservas.css">
+<link rel="stylesheet" href="~/css/Reservas/modalsGlobalReservas.css">
+<link rel="stylesheet" href="~/css/Reservas/indexReserva.css">
+<div class="containerindexReserva">
+    <div class="header">
+        <h1>Mis Reservas</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Habitacion.NumeroHabitacion)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaInicio)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaFin)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Comodidads)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Servicios)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Habitacion.NumeroHabitacion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaInicio)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaFin)
+                        </td>
+                        <td>
+                            @foreach (var comodidad in item.Comodidads)
+                            {
+                                @Html.DisplayFor(modelItem => comodidad.Nombre) <br />
+                            }
+                        </td>
+                        <td>
+                            @foreach (var servicio in item.Servicios)
+                            {
+                                @Html.DisplayFor(modelItem => servicio.Nombre) <br />
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id">Detalles</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

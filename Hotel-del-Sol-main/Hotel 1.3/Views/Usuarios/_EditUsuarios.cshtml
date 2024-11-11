@@ -1,0 +1,82 @@
+﻿@model Hotel.Models.Usuario
+
+@{
+    ViewData["Title"] = "Editar Usuario";
+}
+
+<h1>Editar Usuario</h1>
+
+<hr />
+
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="NombreUsuario" class="control-label">Nombre de Usuario</label>
+        <input asp-for="NombreUsuario" class="form-control" />
+        <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Contrasena" class="control-label">Contraseña</label>
+        <input asp-for="Contrasena" class="form-control" />
+        <span asp-validation-for="Contrasena" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Nombre" class="control-label">Nombre</label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Apellido" class="control-label">Apellido</label>
+        <input asp-for="Apellido" class="form-control" />
+        <span asp-validation-for="Apellido" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Telefono" class="control-label">Telefono</label>
+        <input asp-for="Telefono" class="form-control" />
+        <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FechaNacimiento" class="control-label">Fecha de Nacimiento</label>
+        <input asp-for="FechaNacimiento" class="form-control" />
+        <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="GeneroId" class="control-label">Genero</label>
+        <select asp-for="GeneroId" class="form-control" asp-items="ViewBag.GeneroId"></select>
+        <span asp-validation-for="GeneroId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RolId" class="control-label">Rol</label>
+        <select asp-for="RolId" class="form-control" asp-items="ViewBag.RolId"></select>
+        <span asp-validation-for="RolId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ImagenPerfil" class="control-label">Imagen de Perfil</label>
+        <input asp-for="ImagenPerfil" class="form-control" />
+        <span asp-validation-for="ImagenPerfil" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FechaRegistro" class="control-label">Fecha de Registro</label>
+        <input asp-for="FechaRegistro" class="form-control" />
+        <span asp-validation-for="FechaRegistro" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Activo" class="control-label">Estado</label>
+        <input asp-for="Activo" class="form-control" />
+        <span asp-validation-for="Activo" class="text-danger"></span>
+    </div>
+    <div class="form-group d-flex">
+        <button type="submit" class="btn btn-primary mr-2">
+            <i class="iconify" data-icon="mdi:content-save" data-width="24" data-height="24"></i> 
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">
+            <i class="iconify" data-icon="mdi:close" data-width="24" data-height="24"></i> 
+        </button>
+    </div>
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,99 @@
+﻿@model Hotel.Models.Reserva
+
+<div id="detailsContainer">
+    <h4>Detalles de la Reserva</h4>
+    <hr />
+    <table class="table table-bordered" style="width: 100%;">
+        <tr>
+            <td style="width: 30%; font-weight: bold;">ID de Reserva:</td>
+            <td>@Model.Id</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Usuario:</td>
+            <td>@Model.Usuario.NombreUsuario</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Nombre:</td>
+            <td>@Model.Usuario.Nombre</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Habitación:</td>
+            <td>@Model.Habitacion.NumeroHabitacion, @Model.Habitacion.Descripcion</td>
+        </tr>
+
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Acompañantes:</td>
+            <td>
+                @if (Model.Huespedes == null || !Model.Huespedes.Any())
+                {
+                    <span>No tiene acompañantes</span>
+                }
+                else
+                {
+                    <ul>
+                        @* Mostramos los acompañantes que registra la taabla huespedes pero sin contar el usuario que hizo
+                    la reserva *@
+                        @foreach (var huesped in Model.Huespedes.Where(h => h.Nombre != Model.Usuario.Nombre))
+                        {
+                            <li>@huesped.Nombre</li>
+                        }
+                    </ul>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Fecha de Inicio:</td>
+            <td>@Model.FechaInicio.ToShortDateString()</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Fecha de Fin:</td>
+            <td>@Model.FechaFin.ToShortDateString()</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Fecha de Reserva:</td>
+            <td>@(Model.FechaReserva.HasValue ? Model.FechaReserva.Value.ToString("d") : "Sin fecha")</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Comodidades:</td>
+            <td>
+                @if (Model.Comodidads == null || !Model.Comodidads.Any())
+                {
+                    <span>No tiene comodidades</span>
+                }
+                else
+                {
+                    @string.Join(", ", Model.Comodidads.Select(c => c.Nombre))
+                }
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Servicios:</td>
+            <td>
+                @if (Model.Servicios == null || !Model.Servicios.Any())
+                {
+                    <span>No tiene servicios</span>
+                }
+                else
+                {
+                    @string.Join(", ", Model.Servicios.Select(s => s.Nombre))
+                }
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Total:</td>
+            <td>@Model.PrecioTotal.ToString("C")</td>
+        </tr>
+    </table>
+</div>
+<div>
+    <button type="button" class="btn btn-primary" id="buttonEdit" onclick="loadEditForm('@Model.Id')">
+        <i class="iconify" data-icon="line-md:edit-twotone" data-width="24" data-height="24"></i>
+    </button>
+    <button type="button" class="btn btn-secondary" onclick="closeDetailsModal()">
+        <i class="iconify" data-icon="mdi:close" data-width="24" data-height="24"></i>
+    </button>
+</div>
+
+@section Scripts {
+    <script src="~/js/scriptReservas/indexReserva.js"></script>
+}

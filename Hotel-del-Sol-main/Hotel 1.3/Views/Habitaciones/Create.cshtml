@@ -1,0 +1,97 @@
+﻿@model Hotel.Models.Habitacione
+
+@{
+    ViewData["Title"] = "Crear Habitación";
+}
+
+<link rel="stylesheet" href="~/css/Habitaciones/createHabitaciones.css">
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+        <div class="card-body">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div class="form-group mb-3">
+                    <label asp-for="NumeroHabitacion" class="form-label">
+                        <span class="iconify icon" data-icon="mdi:door"></span> Número de Habitación</label>
+                    <input asp-for="NumeroHabitacion" class="form-control" />
+                    <span asp-validation-for="NumeroHabitacion" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Descripcion" class="form-label">
+                        <span class="iconify icon" data-icon="mdi:note-text"></span> Descripción</label>
+                    <textarea asp-for="Descripcion" class="form-control" rows="1"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Capacidad" class="form-label">
+                        <span class="iconify icon" data-icon="mdi:account-group"></span> Capacidad</label>
+                    <input asp-for="Capacidad" type="number" class="form-control" />
+                    <span asp-validation-for="Capacidad" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="PrecioPorNoche" class="form-label">
+                        <span class="iconify icon" data-icon="mdi:currency-usd"></span> Precio por Noche</label>
+                    <input asp-for="PrecioPorNoche" type="number" step="0.01" class="form-control" />
+                    <span asp-validation-for="PrecioPorNoche" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Activo" class="form-label">
+                        <span class="iconify icon" data-icon="mdi:toggle-switch"></span> Estado</label>
+                    <select asp-for="Activo" class="form-select">
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                    <span asp-validation-for="Activo" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">
+                        <span class="iconify icon" data-icon="mdi:sofa"></span> Comodidades
+                    </label>
+                    <select name="Comodidades" class="form-control" asp-items="ViewBag.Comodidades" multiple="multiple">
+                    </select>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="imagen" class="form-label">
+                        <span class="iconify icon" data-icon="mdi:image"></span> Subir Imagen
+                    </label>
+                    <input type="file" name="imagen" class="form-control-file" required />
+                    <span class="text-danger" asp-validation-for="Imagen"></span>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("form").validate({
+                rules: {
+                    imagen: {
+                        required: true
+                    }
+                },
+                messages: {
+                    imagen: {
+                        required: "Por favor, sube una imagen."
+                    }
+                }
+            });
+        });
+    </script>
+}

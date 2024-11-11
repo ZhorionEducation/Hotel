@@ -1,0 +1,32 @@
+﻿@model Hotel.Models.Comodidade
+
+<div id="detailsContainer">
+    <h4>Detalles de la Comodidad</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Nombre:</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+
+        <dt class="col-sm-3">Descripción:</dt>
+        <dd class="col-sm-9">@Model.Descripcion</dd>
+
+        <dt class="col-sm-3">Imagen:</dt>
+        <dd class="col-sm-9">@Model.Imagen</dd>
+
+        <dt class="col-sm-3">Activo:</dt>
+        <dd class="col-sm-9">@Model.Activo</dd>
+
+        <dt class="col-sm-3">Precio:</dt>
+        <dd class="col-sm-9">@Model.Precio.ToString("C")</dd>
+    </dl>
+</div>
+<div>
+    <button type="button" class="btn btn-primary" id="buttonEdit" onclick="loadEditForm('@Model.Id')">
+        <span class="iconify icon-edit" data-icon="line-md:edit-twotone" data-inline="false" data-rotate="auto"></span>
+    </button>
+    <button type="button" class="btn btn-secondary buttonClose" onclick="closeDetailsModal()">Cerrar</button>
+</div>
+
+@section Scripts {
+    <script src="~/js/scriptComodidades/indexComodidades.js"></script>
+}

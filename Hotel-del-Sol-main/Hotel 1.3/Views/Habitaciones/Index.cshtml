@@ -1,0 +1,110 @@
+﻿@model IEnumerable<Hotel.Models.Habitacione>
+
+@{
+    ViewData["Title"] = "Índice de Habitaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/Habitaciones/modalDetailsHabitaciones.css">
+<link rel="stylesheet" href="~/css/Habitaciones/modalsGlobalHabitaciones.css">
+<link rel="stylesheet" href="~/css/Habitaciones/habitacionesIndex.css">
+
+<div class="containerindexHabitaciones">
+    <div class="header">
+        <h1>Gestión de Habitaciones</h1>
+        <div class="containerActions">
+            <a href="@Url.Action("Create", "Habitaciones")" class="button"><i class="fas fa-plus"></i>Crear Nueva
+                Habitación</a>
+            <div class="search-container">
+                <a href="@Url.Action("ExportToExcel", "Habitaciones")" class="button-pdf"><i class="fas fa-file-pdf"></i></a>
+                <a href="@Url.Action("ExportToExcel", "Habitaciones")" class="button-excel"><i class="fas fa-file-excel"></i></a>
+                <input checked="" class="checkbox" type="checkbox">
+                <div class="mainbox">
+                    <div class="iconContainer">
+                        <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="search_icon">
+                            <path
+                                d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z">
+                            </path>
+                        </svg>
+                    </div>
+                    <input class="search_input" placeholder="Buscar habitaciones..." type="text" id="searchInput">
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Número de Habitación</th>
+                    <th>Foto</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.NumeroHabitacion</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Imagen))
+                            {
+                                <img src="~/img/habitaciones/@item.Imagen" alt="Imagen de la habitación" class="img-thumbnail" />
+                            }
+                        </td>
+                        <td>
+                            <div class="form-check form-switch switch-lg">
+                                <input class="form-check-input" type="checkbox" id="switch-@item.Id" @(item.Activo ?? false ?
+                            "checked" : "") disabled>
+                                <label class="form-check-label" for="switch-@item.Id">@((item.Activo ?? false) ? "" :
+                            "")</label>
+                            </div>
+                        </td>
+                        <td>
+                            <button onclick="loadDetailsModal('@item.Id')" class="btn btn-info">
+                                <span class="iconify icon-search" data-icon="line-md:search-filled" data-inline="false"
+                                    data-rotate="auto"></span>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No hay habitaciones disponibles.</p>
+    }
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <div class="modal-body">
+                <div id="editFormContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para detalles -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDetailsModal()">&times;</span>
+            <div class="modal-body">
+                <div id="detailsContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/scriptHabitaciones/indexHabitaciones.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

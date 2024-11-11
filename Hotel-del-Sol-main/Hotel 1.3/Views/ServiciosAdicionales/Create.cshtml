@@ -1,0 +1,64 @@
+﻿@model Hotel.Models.ServiciosAdicionale
+
+@{
+    ViewData["Title"] = "Crear Servicio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/servicios/CrearServicio.css">
+    <title>Crear Servicio</title>
+</head>
+
+<body>
+    <div class="container-servicio">
+        <h1><i class="fa-solid fa-tools"></i></h1>
+        <h4>Crear Servicio Adicional</h4>
+        <hr />
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"><i class="fas fa-tag"></i> Nombre</label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"><i class="fas fa-align-left"></i> Descripción</label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Precio" class="control-label"><i class="fas fa-dollar-sign"></i> Precio</label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Imagen" class="control-label"><i class="fas fa-image"></i> Imagen</label>
+                <input asp-for="Imagen" class="form-control" />
+                <span asp-validation-for="Imagen" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Activo" class="control-label"><i class="fas fa-toggle-on"></i> Activo</label>
+                <input asp-for="Activo" class="form-control" />
+                <span asp-validation-for="Activo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </form>
+        @if (User.IsInRole("Administrador"))
+        {
+            <a asp-action="Index" class="back-link"><i class="btn btn-secondary"> Regresar a la lista</i></a>
+        }
+    </div>
+</body>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/scriptServicios/servicioCreate.js"></script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,52 @@
+﻿@model Hotel.Models.ServiciosAdicionale
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalles del Servicio</h1>
+
+<div>
+    <h4>Servicios Adicionales</h4>
+    <hr />
+    <table class="table table-bordered" style="width: 50%;">
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Nombre:</td>
+            <td>@Model.Nombre</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Descripción:</td>
+            <td>@Model.Descripcion</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Precio:</td>
+            <td>@Model.Precio.ToString("C")</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Imagen:</td>
+            <td>
+                @if (!string.IsNullOrEmpty(Model.Imagen))
+                {
+                    <img src="~/img/servicios/@Model.Imagen" alt="Imagen del servicio" class="img-thumbnail" />
+                }
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Activo:</td>
+            <td>
+                <div class="form-check form-switch switch-lg">
+                    <input class="form-check-input" type="checkbox" id="switch-@Model.Id" @(Model.Activo ?? false ? "checked" : "") disabled>
+                    <label class="form-check-label" for="switch-@Model.Id">@((Model.Activo ?? false) ? "Activo" : "Inactivo")</label>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
+        <i class="iconify" data-icon="line-md:edit-twotone" data-width="24" data-height="24"></i> Editar
+    </a>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="iconify" data-icon="mdi:arrow-left" data-width="24" data-height="24"></i> Volver a la Lista
+    </a>
+</div>

@@ -1,0 +1,116 @@
+﻿@model Hotel.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2 class="mt-4">Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Calificaciones de Usuarios</h5>
+                <canvas id="userRatingsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Reservas Mensuales</h5>
+                <canvas id="monthlyBookingsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ocupación por Tipo de Habitación</h5>
+                <canvas id="roomOccupancyChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Gráfico de Calificaciones de Usuarios
+        var userRatingsCtx = document.getElementById('userRatingsChart').getContext('2d');
+        new Chart(userRatingsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Usuario 1', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5'],
+                datasets: [{
+                    label: 'Calificaciones',
+                    data: @Html.Raw(Json.Serialize(Model.UserRatings)),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 5
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Reservas Mensuales
+        var monthlyBookingsCtx = document.getElementById('monthlyBookingsChart').getContext('2d');
+        new Chart(monthlyBookingsCtx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.MonthlyBookings.Keys)),
+                datasets: [{
+                    label: 'Reservas',
+                    data: @Html.Raw(Json.Serialize(Model.MonthlyBookings.Values)),
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Ocupación por Tipo de Habitación
+        var roomOccupancyCtx = document.getElementById('roomOccupancyChart').getContext('2d');
+        new Chart(roomOccupancyCtx, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.RoomOccupancy.Keys)),
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(Model.RoomOccupancy.Values)),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Ocupación (%)'
+                    }
+                }
+            }
+        });
+    </script>
+}

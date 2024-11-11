@@ -1,0 +1,59 @@
+﻿@model Hotel.Models.ServiciosAdicionale
+
+@{
+    ViewData["Title"] = "Editar Servicio";
+}
+
+<h1>Editar Servicio</h1>
+
+<h4>Servicios Adicionales</h4>
+<hr />
+<form asp-action="Edit" id="editForm">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    
+    <!-- Nombre -->
+    <div class="form-group">
+        <label asp-for="Nombre" class="control-label">Nombre del Servicio</label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+    
+    <!-- Descripción -->
+    <div class="form-group">
+        <label asp-for="Descripcion" class="control-label">Descripción</label>
+        <input asp-for="Descripcion" class="form-control" />
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+    
+    <!-- Precio -->
+    <div class="form-group">
+        <label asp-for="Precio" class="control-label">Precio</label>
+        <input asp-for="Precio" class="form-control" />
+        <span asp-validation-for="Precio" class="text-danger"></span>
+    </div>
+    
+    <!-- Imagen -->
+    <div class="form-group">
+        <label asp-for="Imagen" class="control-label">Imagen</label>
+        <input asp-for="Imagen" class="form-control" />
+        <span asp-validation-for="Imagen" class="text-danger"></span>
+    </div>
+    
+    <!-- Activo -->
+    <div class="form-group">
+        <label asp-for="Activo" class="control-label">Activo</label>
+        <input asp-for="Activo" class="form-control" />
+        <span asp-validation-for="Activo" class="text-danger"></span>
+    </div>
+    
+    <!-- Botones -->
+    <div class="modal-footer d-flex justify-content-start">
+        <button type="submit" class="btn btn-primary mr-2">
+            <i class="iconify" data-icon="mdi:content-save" data-width="24" data-height="24"></i> 
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">
+            <i class="iconify" data-icon="mdi:close" data-width="24" data-height="24"></i> 
+        </button>
+    </div>
+</form>

@@ -1,0 +1,32 @@
+.login-link {
+    font-size: 44px !important; /* Ajusta el tamaño según sea necesario */
+    color: #ffffff !important; /* Opcional: cambiar el color del texto */
+    
+}
+
+.logout-icon{
+    font-size: 34px;
+    color: #fff;
+   
+}
+
+.logout-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.welcome-text{
+    font-size: 14px;
+    color: #fff;
+}
+
+.logo-sideNav {
+    width: 100%;
+   
+}
+.logo-container {
+    margin-top: auto;
+}
+
