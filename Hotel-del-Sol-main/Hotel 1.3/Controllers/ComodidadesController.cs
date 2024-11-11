@@ -9,6 +9,7 @@ using Hotel.Models;
 
 namespace Hotel.Controllers
 {
+    [AuthorizePermission("Comodidades")]
     public class ComodidadesController : Controller
     {
         private readonly HotelContext _context;
@@ -19,12 +20,14 @@ namespace Hotel.Controllers
         }
 
         // GET: Comodidades
+        [AuthorizePermission("Comodidades")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Comodidades.ToListAsync());
         }
 
         // GET: Comodidades/DetailsPartial/5
+        [AuthorizePermission("Comodidades")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -46,6 +49,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Comodidades/Create
+        [AuthorizePermission("Comodidades")]
         public IActionResult Create()
         {
             return View();
@@ -67,6 +71,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Comodidades/Edit/5
+        [AuthorizePermission("Comodidades")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -90,6 +95,7 @@ namespace Hotel.Controllers
         // POST: Comodidades/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Comodidades")]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Nombre,Descripcion,Imagen,Activo")] Comodidade comodidade)
         {
             if (id != comodidade.Id)
@@ -126,6 +132,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Comodidades/Delete/5
+        [AuthorizePermission("Comodidades")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -150,6 +157,7 @@ namespace Hotel.Controllers
         // POST: Comodidades/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Comodidades")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var comodidade = await _context.Comodidades.FindAsync(id);

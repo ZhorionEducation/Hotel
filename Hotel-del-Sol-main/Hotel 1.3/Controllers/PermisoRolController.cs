@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hotel.ViewModels;
 
+[AuthorizePermission("PermisoRol")]
 public class PermisoRolController : Controller
 {
     private readonly HotelContext _context;
@@ -12,6 +13,7 @@ public class PermisoRolController : Controller
         _context = context;
     }
 
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> Index()
     {
         var permisos = await _context.Permisos.ToListAsync();
@@ -27,6 +29,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> AddPermisoToRol(Guid rolId, Guid permisoId)
     {
         var rol = await _context.Roles.Include(r => r.Permisos).FirstOrDefaultAsync(r => r.Id == rolId);
@@ -51,6 +54,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> EditPermiso(Permiso permiso)
     {
         if (ModelState.IsValid)
@@ -64,6 +68,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> EditRol(Role rol)
     {
         if (ModelState.IsValid)
@@ -77,6 +82,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> DeletePermiso(Guid id)
     {
         var permiso = await _context.Permisos.FindAsync(id);
@@ -88,6 +94,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> DeleteRol(Guid id)
     {
         var rol = await _context.Roles.FindAsync(id);
@@ -98,6 +105,7 @@ public class PermisoRolController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> Details(Guid id, bool isPermiso)
     {
         Console.WriteLine($"Detalles solicitados para ID: {id}, isPermiso: {isPermiso}");
@@ -144,6 +152,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> CreatePermiso(Permiso permiso)
     {
         if (ModelState.IsValid)
@@ -158,6 +167,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> CreateRol(Role rol)
     {
         if (ModelState.IsValid)
@@ -172,6 +182,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> ChangeEstadoRol(Guid id, [FromBody] EstadoChangeModel model)
     {
         var rol = await _context.Roles.FindAsync(id);

@@ -12,6 +12,7 @@ using System.Security.Claims;
 
 namespace Hotel.Controllers
 {
+    [AuthorizePermission("Usuarios")]
     public class UsuariosController : Controller
     {
         private readonly HotelContext _context;
@@ -22,6 +23,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Usuarios
+        [AuthorizePermission("Usuarios")]
         public async Task<IActionResult> Index()
         {
             var hotelContext = _context.Usuarios.Include(u => u.Genero).Include(u => u.Rol);
@@ -30,6 +32,7 @@ namespace Hotel.Controllers
 
         // GET: Usuarios/Details/5
         // GET: Usuarios/Details/5
+        [AuthorizePermission("Usuarios")]
     public async Task<IActionResult> Details(Guid? id)
     {
         if (id == null)
@@ -51,6 +54,7 @@ namespace Hotel.Controllers
     }
 
         // GET: Usuarios/Create
+        [AuthorizePermission("Usuarios")]
         public IActionResult Create()
         {
             ViewData["GeneroId"] = new SelectList(_context.Generos, "Id", "Nombre");
@@ -63,6 +67,7 @@ namespace Hotel.Controllers
         // POST: Usuarios/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Usuarios")]
         public async Task<IActionResult> Create([Bind("Id,NombreUsuario,CorreoElectronico,Contrasena,Nombre,Apellido,Telefono,FechaNacimiento,GeneroId,RolId,ImagenPerfil,FechaRegistro,Activo,NumeroDocumento,TipoDocumentoId")] Usuario usuario)
         {
             if (ModelState.IsValid)
@@ -70,7 +75,7 @@ namespace Hotel.Controllers
                 usuario.Id = Guid.NewGuid();
 
                 // Asignar el Id del rol predefinido
-                usuario.RolId = new Guid("FB0BBBB3-1F6E-4796-AEAA-9402B9CFE19B");
+                usuario.RolId = new Guid("9E658190-A781-4DAA-A16D-BAB03BBA319D");
 
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
@@ -83,6 +88,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Usuarios/Edit/5
+        [AuthorizePermission("Usuarios")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -107,6 +113,7 @@ namespace Hotel.Controllers
         // POST: Usuarios/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Usuarios")]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,NombreUsuario,CorreoElectronico,Contrasena,Nombre,Apellido,Telefono,FechaNacimiento,GeneroId,RolId,ImagenPerfil,FechaRegistro,Activo")] Usuario usuario)
         {
             if (id != usuario.Id)
@@ -146,6 +153,7 @@ namespace Hotel.Controllers
 
         // GET: Usuarios/Login
         [HttpGet]
+        [AuthorizePermission("Usuarios")]
         public IActionResult Login()
         {
             return View();
@@ -154,6 +162,7 @@ namespace Hotel.Controllers
         // POST: Usuarios/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Usuarios")]
         public async Task<IActionResult> Login(string nombreUsuario, string contrasena)
         {
             var usuario = await _context.Usuarios
@@ -189,6 +198,7 @@ namespace Hotel.Controllers
         // POST: Usuarios/Logout
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Usuarios")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
@@ -196,6 +206,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Usuarios/Delete/5
+        [AuthorizePermission("Usuarios")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -223,6 +234,7 @@ namespace Hotel.Controllers
         // POST: Usuarios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Usuarios")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);

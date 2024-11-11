@@ -39,7 +39,11 @@ public class AuthorizePermissionAttribute : Attribute, IAuthorizationFilter
 
         if (usuario == null || !usuario.Rol.Permisos.Any(p => p.Nombre == _permission))
         {
-            context.Result = new ForbidResult();
+            context.Result = new ViewResult
+            {
+                ViewName = "~/Views/Shared/AccessDenied.cshtml",
+                StatusCode = 403
+            };
         }
     }
 }

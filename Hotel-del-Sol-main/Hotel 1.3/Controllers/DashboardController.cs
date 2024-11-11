@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 namespace Hotel.Controllers
 {
+    [AuthorizePermission("Dashboard")]
     public class DashboardController : Controller
     {
+        [AuthorizePermission("Dashboard")]
         public IActionResult Index()
         {
             var viewModel = new DashboardViewModel

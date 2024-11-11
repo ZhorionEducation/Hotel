@@ -13,6 +13,7 @@ using System.Security.Claims;
 
 namespace Hotel.Controllers
 {
+    [AuthorizePermission("Reservas")]
     public class ReservasController : Controller
     {
         private readonly HotelContext _context;
@@ -23,7 +24,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Reservas
-        //[AuthorizePermission("Prueba")]
+        [AuthorizePermission("Reservas")]
         public async Task<IActionResult> Index()
         {
             var hotelContext = _context.Reservas.Include(r => r.Habitacion).Include(r => r.Usuario).Include(r => r.Comodidads).Include(r => r.Servicios);
@@ -56,6 +57,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Reservas/Details/5
+        [AuthorizePermission("Reservas")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -82,6 +84,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Reservas/Create
+        [AuthorizePermission("Reservas")]
         public IActionResult Create()
         {
             ViewData["HabitacionId"] = new SelectList(_context.Habitaciones, "Id", "NumeroHabitacion");
@@ -95,6 +98,7 @@ namespace Hotel.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Reservas")]
         public async Task<IActionResult> Create([Bind("Id,UsuarioId,HabitacionId,FechaInicio,FechaFin,PrecioTotal,NumeroAcompanantes,FechaReserva,Comodidads,Servicios")] Reserva reserva, List<Guid> Comodidads, List<Guid> Servicios, List<Huesped> Huespedes)
         {
             if (ModelState.IsValid)
@@ -164,6 +168,7 @@ namespace Hotel.Controllers
 
 
         // GET: Reservas/Edit/5
+        [AuthorizePermission("Reservas")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -192,6 +197,7 @@ namespace Hotel.Controllers
         // POST: Reservas/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Reservas")]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,UsuarioId,HabitacionId,FechaInicio,FechaFin,PrecioTotal,NumeroAcompanantes,FechaReserva")] Reserva reserva, List<Guid> Comodidads, List<Guid> Servicios)
         {
             if (id != reserva.Id)
@@ -317,6 +323,7 @@ namespace Hotel.Controllers
 
 
         // GET: Reservas/Delete/5
+        [AuthorizePermission("Reservas")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -345,6 +352,7 @@ namespace Hotel.Controllers
         // POST: Reservas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Reservas")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var reserva = await _context.Reservas

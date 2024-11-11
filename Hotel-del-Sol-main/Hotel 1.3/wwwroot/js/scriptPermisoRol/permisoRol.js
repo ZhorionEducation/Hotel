@@ -63,44 +63,48 @@ let currentRolId;
 let currentRolEstado;
 
 function changeEstadoRol(id, estadoActual) {
-    console.log(`Cambiando estado del rol con ID: ${id}, estado actual: ${estadoActual}`);
-
     fetch(`/PermisoRol/ChangeEstadoRol/${id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ estado: !estadoActual }) // Inviertes el estado aquí
+        body: JSON.stringify({ estado: !estadoActual })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log(`Estado cambiado exitosamente para el rol con ID: ${id}`);
             const checkbox = document.querySelector(`input[onclick*="changeEstadoRol('${id}')"]`);
             if (checkbox) {
-                checkbox.checked = !estadoActual; // Cambia el estado en la UI
-            } else {
-                console.error(`Checkbox no encontrado para el rol con ID: ${id}`);
+                checkbox.checked = !estadoActual;
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Estado actualizado!',
+                    text: 'El estado del rol ha sido modificado correctamente',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
             }
         } else {
-            console.error('Error al cambiar el estado:', data.message);
-            // Revertir el cambio en la UI si hubo un error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo cambiar el estado del rol'
+            });
             const checkbox = document.querySelector(`input[onclick*="changeEstadoRol('${id}')"]`);
             if (checkbox) {
                 checkbox.checked = estadoActual;
-            } else {
-                console.error(`Checkbox no encontrado para el rol con ID: ${id}`);
             }
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        // Revertir el cambio en la UI si hubo un error
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al procesar la solicitud'
+        });
         const checkbox = document.querySelector(`input[onclick*="changeEstadoRol('${id}')"]`);
         if (checkbox) {
             checkbox.checked = estadoActual;
-        } else {
-            console.error(`Checkbox no encontrado para el rol con ID: ${id}`);
         }
     });
 }
@@ -176,15 +180,31 @@ function createPermiso(event) {
         .then(data => {
             if (data.success) {
                 closeModal('addPermisoModal');
-                location.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'El permiso ha sido creado correctamente',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload();
+                });
             } else {
-                // Manejar errores
-                console.error('Error al crear permiso:', data.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo crear el permiso: ' + data.message
+                });
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al procesar la solicitud'
+            });
+        });
 }
-
 // Funci�n para manejar la creaci�n de roles
 function createRol(event) {
     event.preventDefault();
@@ -199,15 +219,31 @@ function createRol(event) {
         .then(data => {
             if (data.success) {
                 closeModal('addRolModal');
-                location.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'El rol ha sido creado correctamente',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload();
+                });
             } else {
-                // Manejar errores
-                console.error('Error al crear rol:', data.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo crear el rol: ' + data.message
+                });
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al procesar la solicitud'
+            });
+        });
 }
-
 // Asignar los manejadores de eventos a los formularios cuando el DOM est� cargado
 document.addEventListener('DOMContentLoaded', function () {
     var createPermisoForm = document.getElementById('createPermisoForm');

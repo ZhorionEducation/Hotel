@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Hotel.Controllers
 {
+    [AuthorizePermission("Habitaciones")]
     public class HabitacionesController : Controller
     {
         private readonly HotelContext _context;
@@ -23,12 +24,14 @@ namespace Hotel.Controllers
         }
 
         // GET: Habitaciones
+        [AuthorizePermission("Habitaciones")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Habitaciones.ToListAsync());
         }
 
         // GET: Habitaciones/Details/5
+        [AuthorizePermission("Habitaciones")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -51,6 +54,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Habitaciones/Create
+        [AuthorizePermission("Habitaciones")]
         public IActionResult Create()
         {
             ViewData["Comodidades"] = new SelectList(_context.Comodidades, "Id", "Nombre");
@@ -62,6 +66,7 @@ namespace Hotel.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Habitaciones")]
         public async Task<IActionResult> Create([Bind("Id,NumeroHabitacion,Descripcion,Capacidad,PrecioPorNoche,Activo")] Habitacione habitacione, IFormFile imagen, List<Guid> Comodidades)
         {
             if (ModelState.IsValid)
@@ -110,6 +115,7 @@ namespace Hotel.Controllers
         }
 
         // GET: Habitaciones/Edit/5
+        [AuthorizePermission("Habitaciones")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -148,6 +154,7 @@ namespace Hotel.Controllers
         // POST: Habitaciones/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Habitaciones")]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,NumeroHabitacion,Descripcion,Capacidad,PrecioPorNoche,Activo,Imagen")] Habitacione habitacione, IFormFile nuevaImagen, List<Guid> Comodidades)
         {
             if (id != habitacione.Id)
@@ -235,6 +242,7 @@ namespace Hotel.Controllers
 
 
         // GET: Habitaciones/Delete/5
+        [AuthorizePermission("Habitaciones")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -255,6 +263,7 @@ namespace Hotel.Controllers
         // POST: Habitaciones/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Habitaciones")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var habitacione = await _context.Habitaciones.FindAsync(id);

@@ -9,6 +9,7 @@ using Hotel.Models;
 
 namespace Hotel.Controllers
 {
+    [AuthorizePermission("Servicios")]
     public class ServiciosAdicionalesController : Controller
     {
         private readonly HotelContext _context;
@@ -18,6 +19,7 @@ namespace Hotel.Controllers
             _context = context;
         }
 
+        [AuthorizePermission("Servicios")]
         public IActionResult IndexUsuarios()
         {
             var servicios = _context.ServiciosAdicionales.ToList();
@@ -25,12 +27,14 @@ namespace Hotel.Controllers
         }
 
         // GET: ServiciosAdicionales
+        [AuthorizePermission("Servicios")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.ServiciosAdicionales.ToListAsync());
         }
 
         // GET: ServiciosAdicionales/Details/5
+        [AuthorizePermission("Servicios")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -54,6 +58,7 @@ namespace Hotel.Controllers
         }
 
         // GET: ServiciosAdicionales/Create
+        [AuthorizePermission("Servicios")]
         public IActionResult Create()
         {
             return View();
@@ -64,6 +69,7 @@ namespace Hotel.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Servicios")]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Precio,Imagen,Activo")] ServiciosAdicionale serviciosAdicionale)
         {
             if (ModelState.IsValid)
@@ -77,6 +83,7 @@ namespace Hotel.Controllers
         }
 
         // GET: ServiciosAdicionales/Edit/5
+        [AuthorizePermission("Servicios")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -103,6 +110,7 @@ namespace Hotel.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Servicios")]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Nombre,Descripcion,Precio,Imagen,Activo")] ServiciosAdicionale serviciosAdicionale)
         {
             if (id != serviciosAdicionale.Id)
@@ -140,6 +148,7 @@ namespace Hotel.Controllers
         }
 
         // GET: ServiciosAdicionales/Delete/5
+        [AuthorizePermission("Servicios")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -165,6 +174,7 @@ namespace Hotel.Controllers
         // POST: ServiciosAdicionales/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizePermission("Servicios")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var serviciosAdicionale = await _context.ServiciosAdicionales.FindAsync(id);
