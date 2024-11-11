@@ -12,7 +12,6 @@ using System.Security.Claims;
 
 namespace Hotel.Controllers
 {
-    [AuthorizePermission("Usuarios")]
     public class UsuariosController : Controller
     {
         private readonly HotelContext _context;
@@ -153,7 +152,6 @@ namespace Hotel.Controllers
 
         // GET: Usuarios/Login
         [HttpGet]
-        [AuthorizePermission("Usuarios")]
         public IActionResult Login()
         {
             return View();
@@ -162,7 +160,6 @@ namespace Hotel.Controllers
         // POST: Usuarios/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizePermission("Usuarios")]
         public async Task<IActionResult> Login(string nombreUsuario, string contrasena)
         {
             var usuario = await _context.Usuarios
@@ -198,7 +195,6 @@ namespace Hotel.Controllers
         // POST: Usuarios/Logout
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizePermission("Usuarios")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
