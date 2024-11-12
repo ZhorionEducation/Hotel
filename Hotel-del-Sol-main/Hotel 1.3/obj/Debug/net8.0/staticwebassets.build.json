@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "+70WeId4nkF9KrymrooPd2Xuro9STt8ETuxD1TVc/qM=",
+  "Hash": "PrjS2GGP4lxm8S2fzCDGeqhEzMqZB6t+Xfq5Ndq4DNU=",
   "Source": "Hotel",
   "BasePath": "_content/Hotel",
   "Mode": "Default",
@@ -53,6 +53,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Hotel.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\wwwroot\\css\\AccessDenied.css",
+      "SourceId": "Hotel",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\wwwroot\\",
+      "BasePath": "_content/Hotel",
+      "RelativePath": "css/AccessDenied.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\AccessDenied.css"
     },
     {
       "Identity": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\wwwroot\\css\\animate.css",
@@ -2240,6 +2259,25 @@
       "OriginalItemSpec": "wwwroot\\img\\comprobantes\\3f271c61-b835-4c5f-8736-98e3f5c25050.png"
     },
     {
+      "Identity": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\wwwroot\\img\\comprobantes\\42bbdad4-f3ba-45b5-8db5-0b417407919b.png",
+      "SourceId": "Hotel",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\wwwroot\\",
+      "BasePath": "_content/Hotel",
+      "RelativePath": "img/comprobantes/42bbdad4-f3ba-45b5-8db5-0b417407919b.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\comprobantes\\42bbdad4-f3ba-45b5-8db5-0b417407919b.png"
+    },
+    {
       "Identity": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\wwwroot\\img\\comprobantes\\4d7ad22c-5917-4faa-998d-67e952756b7e.png",
       "SourceId": "Hotel",
       "SourceType": "Discovered",
@@ -2447,6 +2485,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\comprobantes\\aa69612d-8086-44e7-8600-6639e950a807.png"
+    },
+    {
+      "Identity": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\wwwroot\\img\\comprobantes\\b13b4561-703e-41a6-964e-2f467d6011e7.png",
+      "SourceId": "Hotel",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\wwwroot\\",
+      "BasePath": "_content/Hotel",
+      "RelativePath": "img/comprobantes/b13b4561-703e-41a6-964e-2f467d6011e7.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\comprobantes\\b13b4561-703e-41a6-964e-2f467d6011e7.png"
     },
     {
       "Identity": "C:\\Users\\Administrator\\Desktop\\Hotel\\Hotel-del-Sol-main\\Hotel 1.3\\wwwroot\\img\\comprobantes\\b20b6e64-27b5-4280-a6d3-731168b5c16c.png",

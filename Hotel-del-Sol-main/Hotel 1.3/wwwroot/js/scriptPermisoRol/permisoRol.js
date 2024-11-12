@@ -2,10 +2,7 @@
 
 function openModal(modalId, itemId) {
     var modal = document.getElementById(modalId);
-    if (!modal) {
-        console.error(`Modal con ID: ${modalId} no encontrado.`);
-        return;
-    }
+    if (!modal) return;
 
     modal.style.display = "block";
     setTimeout(() => {
@@ -18,6 +15,26 @@ function openModal(modalId, itemId) {
         document.getElementById('editPermisoId').value = itemId;
     } else if (modalId === 'editRolModal') {
         document.getElementById('editRolId').value = itemId;
+        
+        // Cargar datos del rol y sus permisos
+        fetch(`/PermisoRol/GetRolDetails/${itemId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('editRolNombre').value = data.nombre;
+                
+                // Desmarcar todos los checkboxes primero
+                document.querySelectorAll('input[name="PermisosIds"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+
+                // Marcar los checkboxes de los permisos existentes
+                data.permisos.forEach(permisoId => {
+                    const checkbox = document.querySelector(`input[name="PermisosIds"][value="${permisoId}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
+            });
     } else if (modalId === 'deletePermisoModal') {
         document.getElementById('deletePermisoId').value = itemId;
     } else if (modalId === 'deleteRolModal') {
@@ -63,44 +80,48 @@ let currentRolId;
 let currentRolEstado;
 
 function changeEstadoRol(id, estadoActual) {
-    console.log(`Cambiando estado del rol con ID: ${id}, estado actual: ${estadoActual}`);
-
     fetch(`/PermisoRol/ChangeEstadoRol/${id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ estado: !estadoActual }) // Inviertes el estado aquí
+        body: JSON.stringify({ estado: !estadoActual })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log(`Estado cambiado exitosamente para el rol con ID: ${id}`);
             const checkbox = document.querySelector(`input[onclick*="changeEstadoRol('${id}')"]`);
             if (checkbox) {
-                checkbox.checked = !estadoActual; // Cambia el estado en la UI
-            } else {
-                console.error(`Checkbox no encontrado para el rol con ID: ${id}`);
+                checkbox.checked = !estadoActual;
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Estado actualizado!',
+                    text: 'El estado del rol ha sido modificado correctamente',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
             }
         } else {
-            console.error('Error al cambiar el estado:', data.message);
-            // Revertir el cambio en la UI si hubo un error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo cambiar el estado del rol'
+            });
             const checkbox = document.querySelector(`input[onclick*="changeEstadoRol('${id}')"]`);
             if (checkbox) {
                 checkbox.checked = estadoActual;
-            } else {
-                console.error(`Checkbox no encontrado para el rol con ID: ${id}`);
             }
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        // Revertir el cambio en la UI si hubo un error
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al procesar la solicitud'
+        });
         const checkbox = document.querySelector(`input[onclick*="changeEstadoRol('${id}')"]`);
         if (checkbox) {
             checkbox.checked = estadoActual;
-        } else {
-            console.error(`Checkbox no encontrado para el rol con ID: ${id}`);
         }
     });
 }
@@ -176,38 +197,108 @@ function createPermiso(event) {
         .then(data => {
             if (data.success) {
                 closeModal('addPermisoModal');
-                location.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'El permiso ha sido creado correctamente',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload();
+                });
             } else {
-                // Manejar errores
-                console.error('Error al crear permiso:', data.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo crear el permiso: ' + data.message
+                });
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al procesar la solicitud'
+            });
+        });
 }
-
-// Funci�n para manejar la creaci�n de roles
-function createRol(event) {
-    event.preventDefault();
-    var form = event.target;
-    var formData = new FormData(form);
-
-    fetch(form.action, {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                closeModal('addRolModal');
-                location.reload();
-            } else {
-                // Manejar errores
-                console.error('Error al crear rol:', data.message);
+// Función para manejar la creación de roles
+document.addEventListener('DOMContentLoaded', function() {
+    const addRolForm = document.querySelector('#addRolForm');
+    if (addRolForm) {
+        addRolForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validación del nombre
+            const nombreInput = document.getElementById('addRolNombreInput');
+            if (!nombreInput.value.trim()) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El nombre del rol es requerido'
+                });
+                return;
             }
-        })
-        .catch(error => console.error('Error:', error));
-}
 
+            // Validación de permisos
+            const permisosSeleccionados = Array.from(
+                document.querySelectorAll('#addRolModal input[name="PermisosIds"]:checked')
+            );
+            
+            if (permisosSeleccionados.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Debe seleccionar al menos un permiso'
+                });
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('Nombre', nombreInput.value.trim());
+                formData.append('PermisosIds', JSON.stringify(permisosSeleccionados.map(cb => cb.value)));
+
+                const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (tokenElement) {
+                    formData.append('__RequestVerificationToken', tokenElement.value);
+                }
+
+                const response = await fetch('/PermisoRol/CreateRol', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    closeModal('addRolModal');
+                    await Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    location.reload();
+                } else {
+                    throw new Error(data.message || 'Error al crear el rol');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'Error al crear el rol'
+                });
+            }
+        });
+    }
+});
 // Asignar los manejadores de eventos a los formularios cuando el DOM est� cargado
 document.addEventListener('DOMContentLoaded', function () {
     var createPermisoForm = document.getElementById('createPermisoForm');
@@ -218,5 +309,66 @@ document.addEventListener('DOMContentLoaded', function () {
     var createRolForm = document.getElementById('createRolForm');
     if (createRolForm) {
         createRolForm.addEventListener('submit', createRol);
+    }
+});
+
+// Función para manejar el envío del formulario de edición
+document.addEventListener('DOMContentLoaded', function() {
+    const editRolForm = document.querySelector('#editRolModal form');
+    if (editRolForm) {
+        editRolForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                const formData = new FormData();
+                formData.append('Id', document.getElementById('editRolId').value);
+                formData.append('Nombre', document.getElementById('editRolNombre').value);
+                
+                const permisosSeleccionados = Array.from(
+                    document.querySelectorAll('input[name="PermisosIds"]:checked')
+                ).map(cb => cb.value);
+                
+                formData.append('PermisosIds', JSON.stringify(permisosSeleccionados));
+
+                // Si usas tokens antiforgery:
+                const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (tokenElement) {
+                    formData.append('__RequestVerificationToken', tokenElement.value);
+                }
+
+                const response = await fetch('/PermisoRol/EditRol', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    closeModal('editRolModal');
+                    await Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    location.reload();
+                } else {
+                    throw new Error(data.message || 'Error al actualizar el rol');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'Error al actualizar el rol'
+                });
+            }
+        });
     }
 });

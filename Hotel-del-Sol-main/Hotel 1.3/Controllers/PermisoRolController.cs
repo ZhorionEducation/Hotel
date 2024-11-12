@@ -2,7 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hotel.ViewModels;
+using System.Text.Json;
+using System.Linq;
+using System.Threading.Tasks;
 
+[AuthorizePermission("PermisoRol")]
 public class PermisoRolController : Controller
 {
     private readonly HotelContext _context;
@@ -12,6 +16,7 @@ public class PermisoRolController : Controller
         _context = context;
     }
 
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> Index()
     {
         var permisos = await _context.Permisos.ToListAsync();
@@ -27,6 +32,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> AddPermisoToRol(Guid rolId, Guid permisoId)
     {
         var rol = await _context.Roles.Include(r => r.Permisos).FirstOrDefaultAsync(r => r.Id == rolId);
@@ -51,6 +57,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> EditPermiso(Permiso permiso)
     {
         if (ModelState.IsValid)
@@ -64,19 +71,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditRol(Role rol)
-    {
-        if (ModelState.IsValid)
-        {
-            _context.Update(rol);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        return PartialView("_ErrorModal");
-    }
-
-    [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> DeletePermiso(Guid id)
     {
         var permiso = await _context.Permisos.FindAsync(id);
@@ -88,6 +83,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> DeleteRol(Guid id)
     {
         var rol = await _context.Roles.FindAsync(id);
@@ -98,6 +94,7 @@ public class PermisoRolController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> Details(Guid id, bool isPermiso)
     {
         Console.WriteLine($"Detalles solicitados para ID: {id}, isPermiso: {isPermiso}");
@@ -144,6 +141,7 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> CreatePermiso(Permiso permiso)
     {
         if (ModelState.IsValid)
@@ -158,20 +156,48 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRol(Role rol)
+[AuthorizePermission("PermisoRol")]
+public async Task<IActionResult> CreateRol([FromForm] string Nombre, [FromForm] string PermisosIds)
+{
+    try
     {
-        if (ModelState.IsValid)
+        if (string.IsNullOrWhiteSpace(Nombre))
+            return BadRequest(new { success = false, message = "El nombre es requerido" });
+
+        var rol = new Role
         {
-            rol.Id = Guid.NewGuid();
-            _context.Roles.Add(rol);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            Id = Guid.NewGuid(),
+            Nombre = Nombre,
+            Estado = true,
+            Permisos = new List<Permiso>()
+        };
+
+        if (!string.IsNullOrEmpty(PermisosIds))
+        {
+            var permisoIdList = JsonSerializer.Deserialize<List<Guid>>(PermisosIds);
+            var permisos = await _context.Permisos
+                .Where(p => permisoIdList.Contains(p.Id))
+                .ToListAsync();
+
+            rol.Permisos = permisos;
         }
 
-        return PartialView("_ErrorModal");
+        _context.Roles.Add(rol);
+        await _context.SaveChangesAsync();
+        return Json(new { success = true, message = "Rol creado correctamente" });
     }
+    catch (JsonException)
+    {
+        return BadRequest(new { success = false, message = "Error al procesar los permisos seleccionados" });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, new { success = false, message = $"Error al crear el rol: {ex.Message}" });
+    }
+}
 
     [HttpPost]
+    [AuthorizePermission("PermisoRol")]
     public async Task<IActionResult> ChangeEstadoRol(Guid id, [FromBody] EstadoChangeModel model)
     {
         var rol = await _context.Roles.FindAsync(id);
@@ -187,6 +213,68 @@ public class PermisoRolController : Controller
         Console.WriteLine($"Estado del rol con ID: {id} cambiado a {model.Estado}");
 
         return Json(new { success = true });
+    }
+
+    public async Task<IActionResult> GetRolDetails(Guid id)
+    {
+        var rol = await _context.Roles
+            .Include(r => r.Permisos)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
+        if (rol == null)
+            return Json(new { success = false, message = "Rol no encontrado" });
+
+        return Json(new { 
+            success = true, 
+            nombre = rol.Nombre,
+            permisos = rol.Permisos.Select(p => p.Id).ToList()
+        });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditRol([FromForm] Guid Id, [FromForm] string Nombre, [FromForm] string PermisosIds)
+    {
+        try
+        {
+            var rol = await _context.Roles
+                .Include(r => r.Permisos)
+                .FirstOrDefaultAsync(r => r.Id == Id);
+
+            if (rol == null)
+                return NotFound(new { success = false, message = "Rol no encontrado" });
+
+            if (string.IsNullOrWhiteSpace(Nombre))
+                return BadRequest(new { success = false, message = "El nombre es requerido" });
+
+            rol.Nombre = Nombre;
+
+            // Limpiar permisos existentes
+            rol.Permisos.Clear();
+
+            if (!string.IsNullOrEmpty(PermisosIds))
+            {
+                var permisoIdList = JsonSerializer.Deserialize<List<Guid>>(PermisosIds);
+                var permisos = await _context.Permisos
+                    .Where(p => permisoIdList.Contains(p.Id))
+                    .ToListAsync();
+
+                foreach (var permiso in permisos)
+                {
+                    rol.Permisos.Add(permiso);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return Json(new { success = true, message = "Rol actualizado correctamente" });
+        }
+        catch (JsonException)
+        {
+            return BadRequest(new { success = false, message = "Error al procesar los permisos seleccionados" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { success = false, message = $"Error al actualizar el rol: {ex.Message}" });
+        }
     }
 
     public class EstadoChangeModel
