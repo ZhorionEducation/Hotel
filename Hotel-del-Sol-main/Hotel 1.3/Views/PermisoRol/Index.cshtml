@@ -122,10 +122,6 @@
                                             <i class="iconify icon-search" data-icon="line-md:search-filled" data-width="24"
                                                 data-height="24"></i>
                                         </button>
-                                        <button type="button" class="btn btn-success"
-                                            onclick="openAddPermisoRolModal('@rol.Id')">
-                                            <i class="bi bi-plus-circle"></i> Agregar Permiso
-                                        </button>
                                     </td>
                                 </tr>
                             }
@@ -241,22 +237,53 @@
     </div>
 </div>
 
-<!-- Modal para Agregar Rol -->
+<!-- Modal para agregar rol -->
 <div id="addRolModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal('addRolModal')">&times;</span>
         <h2>Agregar Rol</h2>
-        <form asp-action="CreateRol" method="post" class="needs-validation" novalidate>
+        <form id="addRolForm" method="post" class="needs-validation" novalidate>
+            @Html.AntiForgeryToken()
             <div class="mb-3">
-                <label for="addRolNombre" class="form-label">Nombre del Rol</label>
-                <input type="text" class="form-control" id="addRolNombre" name="Nombre" required
-                    pattern="^[A-Za-zñÑ\s]{1,25}$" maxlength="25" />
+                <label for="addRolNombreInput" class="form-label">Nombre del Rol</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="addRolNombreInput" 
+                       name="Nombre" 
+                       required 
+                       pattern="^[A-Za-zñÑ\s]{1,25}$" 
+                       maxlength="25" />
                 <div class="invalid-feedback">
                     Ingrese 1-25 letras y espacios.
                 </div>
             </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Permisos</label>
+                <div class="permissions-container">
+                    @foreach (var permiso in Model.Permisos)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" 
+                                   type="checkbox" 
+                                   name="PermisosIds" 
+                                   value="@permiso.Id" 
+                                   id="permiso-add-@permiso.Id">
+                            <label class="form-check-label" 
+                                   for="permiso-add-@permiso.Id">
+                                @permiso.Nombre
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="invalid-feedback">
+                    Seleccione al menos un permiso.
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-success">
                 <i class="iconify" data-icon="mdi:plus-circle" data-width="24" data-height="24"></i>
+                Guardar
             </button>
         </form>
     </div>

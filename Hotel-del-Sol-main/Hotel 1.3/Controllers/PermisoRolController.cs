@@ -156,19 +156,45 @@ public class PermisoRolController : Controller
     }
 
     [HttpPost]
-    [AuthorizePermission("PermisoRol")]
-    public async Task<IActionResult> CreateRol(Role rol)
+[AuthorizePermission("PermisoRol")]
+public async Task<IActionResult> CreateRol([FromForm] string Nombre, [FromForm] string PermisosIds)
+{
+    try
     {
-        if (ModelState.IsValid)
+        if (string.IsNullOrWhiteSpace(Nombre))
+            return BadRequest(new { success = false, message = "El nombre es requerido" });
+
+        var rol = new Role
         {
-            rol.Id = Guid.NewGuid();
-            _context.Roles.Add(rol);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            Id = Guid.NewGuid(),
+            Nombre = Nombre,
+            Estado = true,
+            Permisos = new List<Permiso>()
+        };
+
+        if (!string.IsNullOrEmpty(PermisosIds))
+        {
+            var permisoIdList = JsonSerializer.Deserialize<List<Guid>>(PermisosIds);
+            var permisos = await _context.Permisos
+                .Where(p => permisoIdList.Contains(p.Id))
+                .ToListAsync();
+
+            rol.Permisos = permisos;
         }
 
-        return PartialView("_ErrorModal");
+        _context.Roles.Add(rol);
+        await _context.SaveChangesAsync();
+        return Json(new { success = true, message = "Rol creado correctamente" });
     }
+    catch (JsonException)
+    {
+        return BadRequest(new { success = false, message = "Error al procesar los permisos seleccionados" });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, new { success = false, message = $"Error al crear el rol: {ex.Message}" });
+    }
+}
 
     [HttpPost]
     [AuthorizePermission("PermisoRol")]

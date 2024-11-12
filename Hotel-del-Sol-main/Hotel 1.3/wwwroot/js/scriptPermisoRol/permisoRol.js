@@ -222,45 +222,83 @@ function createPermiso(event) {
             });
         });
 }
-// Funci�n para manejar la creaci�n de roles
-function createRol(event) {
-    event.preventDefault();
-    var form = event.target;
-    var formData = new FormData(form);
-
-    fetch(form.action, {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                closeModal('addRolModal');
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: 'El rol ha sido creado correctamente',
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(() => {
-                    location.reload();
-                });
-            } else {
+// Función para manejar la creación de roles
+document.addEventListener('DOMContentLoaded', function() {
+    const addRolForm = document.querySelector('#addRolForm');
+    if (addRolForm) {
+        addRolForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validación del nombre
+            const nombreInput = document.getElementById('addRolNombreInput');
+            if (!nombreInput.value.trim()) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No se pudo crear el rol: ' + data.message
+                    text: 'El nombre del rol es requerido'
+                });
+                return;
+            }
+
+            // Validación de permisos
+            const permisosSeleccionados = Array.from(
+                document.querySelectorAll('#addRolModal input[name="PermisosIds"]:checked')
+            );
+            
+            if (permisosSeleccionados.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Debe seleccionar al menos un permiso'
+                });
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('Nombre', nombreInput.value.trim());
+                formData.append('PermisosIds', JSON.stringify(permisosSeleccionados.map(cb => cb.value)));
+
+                const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+                if (tokenElement) {
+                    formData.append('__RequestVerificationToken', tokenElement.value);
+                }
+
+                const response = await fetch('/PermisoRol/CreateRol', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    closeModal('addRolModal');
+                    await Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    location.reload();
+                } else {
+                    throw new Error(data.message || 'Error al crear el rol');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'Error al crear el rol'
                 });
             }
-        })
-        .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Hubo un error al procesar la solicitud'
-            });
         });
-}
+    }
+});
 // Asignar los manejadores de eventos a los formularios cuando el DOM est� cargado
 document.addEventListener('DOMContentLoaded', function () {
     var createPermisoForm = document.getElementById('createPermisoForm');
